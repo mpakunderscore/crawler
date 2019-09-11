@@ -16,6 +16,7 @@ app.get('/api', function (request, response) {
     response.json({count: globalWords.length, words: globalWords});
 });
 
+
 let url = 'https://en.wikipedia.org/w/api.php?format=json&action=query&titles=Albert%20Einstein&prop=revisions&rvprop=content'
 
 request(url, function (error, response, body) {
