@@ -1,20 +1,3 @@
-let request = require('request');
-let express = require('express');
-let app = express();
-
-//static
-app.use('/', express.static(__dirname + '/'));
-
-let server = require('http').Server(app);
-server.listen(process.env.PORT || 8080);
-
-let globalWords = [];
-
-//api
-app.get('/api', function (request, response) {
-
-    response.json({count: globalWords.length, words: globalWords});
-});
 
 
 let url = 'https://en.wikipedia.org/w/api.php?format=json&action=query&titles=Albert%20Einstein&prop=revisions&rvprop=content'
@@ -46,5 +29,4 @@ request(url, function (error, response, body) {
 
     globalWords = sortable;
 });
-
 
