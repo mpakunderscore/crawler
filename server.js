@@ -1,4 +1,5 @@
-let request = require('request');
+const crawler = require("./server/crawler");
+
 let express = require('express');
 let app = express();
 
@@ -8,11 +9,18 @@ app.use('/', express.static(__dirname + '/web'));
 let server = require('http').Server(app);
 server.listen(process.env.PORT || 8080);
 
-let globalWords = [];
 
 //api
 app.get('/api', function (request, response) {
 
-    response.json({count: globalWords.length, words: globalWords});
+    response.json({});
+});
+
+app.get('/url', async function (request, response) {
+
+    // console.log(request.query.url)
+    // console.log(request.query.param2)
+
+    response.json(await crawler.getURLData(request.query.url));
 });
 

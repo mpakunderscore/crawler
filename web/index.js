@@ -28,9 +28,12 @@ target.addEventListener('focus', (event) => {
 
 target.addEventListener('paste', (event) => {
 
-    let paste = (event.clipboardData || window.clipboardData).getData('text');
+    let paste = (event.clipboardData || window.clipboardData).getData('text') + '';
 
-    console.log(paste);
+    console.log(paste + '');
+
+    if (!paste.startsWith('https://') || !paste.startsWith('http://'))
+        return;
 
     target.innerText = paste;
 

@@ -1,11 +1,35 @@
+const cheerio = require('cheerio')
 
+const axios = require("axios");
 
-let url = 'https://en.wikipedia.org/w/api.php?format=json&action=query&titles=Albert%20Einstein&prop=revisions&rvprop=content'
+exports.getURLData = async function (url) {
 
-request(url, function (error, response, body) {
+    console.log(url)
 
-    let responseJson = JSON.parse(body);
-    let text = responseJson.query.pages[Object.keys(responseJson.query.pages)[0]].revisions[0]['*']; // Print the HTML for the Google homepage.
+    try {
+        const response = await axios.get(url);
+        const data = response.data;
+
+        // console.log(data);
+
+        const $ = cheerio.load(data)
+
+        let text = $.root().text().toLowerCase().replace(/\n/g, '');
+
+        console.log('Text length: ' + text.length)
+
+        // let responseJson = JSON.parse(body);
+        // console.log(responseJson)
+        // let text = responseJson.query.pages[Object.keys(responseJson.query.pages)[0]].revisions[0]['*']; // Print the HTML for the Google homepage.
+
+        return getWords(text);
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+let getWords = function (text) {
 
     let words = text.split(' ').reduce((prev, next) => {
 
@@ -27,6 +51,8 @@ request(url, function (error, response, body) {
         return b['count'] - a['count'];
     });
 
-    globalWords = sortable;
-});
+    console.log('Words length: ' + sortable.length)
+
+    return {words: sortable}
+}
 
