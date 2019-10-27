@@ -2,7 +2,7 @@ const target = document.getElementById('first');
 
 const main = document.getElementsByTagName('main')[0];
 
-console.log(main)
+// console.log(main)
 
 target.addEventListener('focus', (event) => {
 
@@ -30,10 +30,10 @@ target.addEventListener('paste', (event) => {
 
     let paste = (event.clipboardData || window.clipboardData).getData('text') + '';
 
-    console.log(paste + '');
+    // if (!paste.startsWith('https://') || !paste.startsWith('http://'))
+    //     return;
 
-    if (!paste.startsWith('https://') || !paste.startsWith('http://'))
-        return;
+    console.log(paste + '');
 
     target.innerText = paste;
 
@@ -46,6 +46,11 @@ target.addEventListener('paste', (event) => {
     // Append the text to <li>
     main.insertBefore(node, main.childNodes[0]);     // Append <li> to <ul> with id='myList'
 
+    const response = get('/url?url='+ paste);
+    // const data = response.data;
+
+    console.log(response)
+
     // const selection = window.getSelection();
     //
     // if (!selection.rangeCount)
@@ -57,3 +62,11 @@ target.addEventListener('paste', (event) => {
 
 
 });
+
+function get(theUrl) {
+
+    let xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
+    xmlHttp.send( null );
+    return xmlHttp.responseText;
+}
