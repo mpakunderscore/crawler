@@ -14,15 +14,17 @@ exports.getURLData = async function (url) {
 
         const $ = cheerio.load(data)
 
+        let title = $("title").text();
         let text = $.root().text().toLowerCase().replace(/\n/g, '');
 
+        console.log('Title: ' + title)
         console.log('Text length: ' + text.length)
 
         // let responseJson = JSON.parse(body);
         // console.log(responseJson)
         // let text = responseJson.query.pages[Object.keys(responseJson.query.pages)[0]].revisions[0]['*']; // Print the HTML for the Google homepage.
 
-        return getWords(text);
+        return {title: title, words: getWords(text)};
 
     } catch (error) {
         console.log(error);
@@ -53,6 +55,6 @@ let getWords = function (text) {
 
     console.log('Words length: ' + sortable.length)
 
-    return {words: sortable}
+    return sortable;
 }
 
