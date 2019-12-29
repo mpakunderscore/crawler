@@ -24,7 +24,7 @@ exports.getURLData = async function (url) {
         // console.log(responseJson)
         // let text = responseJson.query.pages[Object.keys(responseJson.query.pages)[0]].revisions[0]['*']; // Print the HTML for the Google homepage.
 
-        return {title: title, words: getWords(text)};
+        return {url: url, title: title, words: getWords(text), text: text.length};
 
     } catch (error) {
         console.log(error);

@@ -3,16 +3,23 @@ body {
     font-size: 16px;
 
     display: flex;
+    flex-direction: column;
     justify-content: center;
+    /*width: 100%;*/
+
+    align-items: center;
 
     margin: 20px;
 }
 
 main {
     padding: 20px;
-    margin-top: 50px;
-    width: 100%;
-    max-width: 800px;
+    position: relative;
+    /*margin-top: 50px;*/
+    /*width: 100%;*/
+    /*display: flex;*/
+    flex-direction: column;
+    /*max-width: 800px;*/
 
     justify-content: center;
 
@@ -22,6 +29,20 @@ main {
     box-shadow: inset 0 5px 10px rgba(0, 0, 0, 0.1);
 
     overflow: hidden;
+}
+
+a {
+    text-decoration: none;
+}
+
+.menu {
+    display: flex;
+    flex-direction: row;
+    padding-bottom: 20px;
+}
+
+.menu div {
+    padding-right: 10px;
 }
 
 .link {
@@ -40,6 +61,10 @@ main {
 /*    height: 62px;*/
 /*    margin: 0 auto 20px auto;*/
 /*}*/
+
+.link:first-child {
+    color: gray;
+}
 
 .link:last-child {
     margin-bottom: 0;

@@ -4,6 +4,14 @@ let target = main.getElementsByClassName('link')[0];
 
 // console.log(main)
 
+// document.execCommand("insertHTML", false, text);
+
+function convertToPlaintext() {
+    let textContent = this.textContent;
+    this.innerHTML = "";
+    this.textContent = textContent;
+}
+
 let initTarget = function () {
 
     target.addEventListener('focus', (event) => {
@@ -28,7 +36,11 @@ let initTarget = function () {
         // event.preventDefault();
     });
 
+    target.addEventListener("input", convertToPlaintext, false);
+
     target.addEventListener('paste', (event) => {
+
+        target.innerHTML = target.innerText;
 
         let paste = (event.clipboardData || window.clipboardData).getData('text');
 
@@ -51,19 +63,34 @@ let initTarget = function () {
         let node = document.createElement('div');
         node.classList.add('link');
         node.contentEditable = 'true';
-        let textNode = document.createTextNode('Insert link here');
-        node.appendChild(textNode);
+        node.innerHTML = 'Insert link here';
 
         main.insertBefore(node, main.childNodes[0]);     // Append <li> to <ul> with id='myList'
 
         target.contentEditable = 'false';
+        let dataTarget = target;
         target = node;
+
+
+
         initTarget();
 
-        const response = get('/url?url=' + paste);
+        setTimeout(function () {
+
+            const response = get('/url?url=' + paste);
+            let responseJson =  JSON.parse(response)
+            console.log(responseJson)
+            dataTarget.innerHTML =
+                '<a href="' + responseJson.url + '" target="_blank">' + responseJson.title + '</a>' +
+                '<br/>Text: ' + responseJson.text +
+                '<br/>Words: ' + responseJson.words.length;
+
+        }, 0);
+
+
         // const data = response.data;
 
-        console.log(JSON.parse(response))
+
 
         // const selection = window.getSelection();
         //
