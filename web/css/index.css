@@ -16,7 +16,7 @@ main {
     padding: 20px;
     position: relative;
     /*margin-top: 50px;*/
-    /*width: 100%;*/
+    width: 500px;
     /*display: flex;*/
     flex-direction: column;
     /*max-width: 800px;*/
