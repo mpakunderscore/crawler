@@ -1,6 +1,6 @@
 const cheerio = require('cheerio')
 
-const axios = require("axios");
+const axios = require('axios');
 
 exports.getURLData = async function (url) {
 
@@ -14,7 +14,7 @@ exports.getURLData = async function (url) {
 
         const $ = cheerio.load(data)
 
-        let title = $("title").text();
+        let title = $('title').text();
         let text = $.root().text().toLowerCase().replace(/\n/g, '');
 
         console.log('Title: ' + title)
@@ -56,5 +56,23 @@ let getWords = function (text) {
     console.log('Words length: ' + sortable.length)
 
     return sortable;
+}
+
+exports.getWikiCategories = async function (title) {
+    try {
+        const url = encodeURI('https://en.wikipedia.org/wiki/Category:' + title);
+        const response = await axios.get(url);
+        const data = response.data;
+
+        let categories = [];
+        const $ = cheerio.load(data);
+        $('#mw-subcategories .CategoryTreeItem').find('a').each(function (index, element) {
+            categories.push($(element).text());
+        });
+
+        return {categories: categories};
+    } catch (error) {
+        console.log(error);
+    }
 }
 

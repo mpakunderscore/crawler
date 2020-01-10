@@ -2,13 +2,44 @@
     /*background-color: lightcoral;*/
 }
 
-.links line {
+line {
     stroke: #999;
-    stroke-opacity: 0.6;
+    stroke-opacity: 0.3;
 }
 
-.nodes circle {
+g:hover {
+}
+
+circle {
     fill: ghostwhite;
+    stroke: #848484;
+    stroke-width: 1px;
+}
+
+circle.active {
+    stroke: #00b000;
+}
+
+circle:hover {
+    cursor: pointer;
     stroke: black;
-    stroke-width: 1.5px;
+    fill: #00b000;
+}
+
+circle:hover + text {
+    fill-opacity: 1;
+    z-index: 2;
+}
+
+text {
+    position: relative;
+    fill: black;
+    fill-opacity: 0.2;
+    /*visibility: hidden;*/
+    pointer-events: none;
+    z-index: 1;
+}
+
+text.active {
+    fill-opacity: 1;
 }
