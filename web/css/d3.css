@@ -8,6 +8,7 @@
 }
 
 .nodes circle {
-    stroke: #fff;
+    fill: ghostwhite;
+    stroke: black;
     stroke-width: 1.5px;
 }
