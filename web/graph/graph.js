@@ -1,5 +1,12 @@
 const width = 1000, height = 600;
 
+let mainCategory = {id: "Main_topic_classifications"};
+let nodes_data =  [mainCategory, {id: 'Objects‎'}, {id: 'Main topic articles'}];
+
+let links_data = [];
+links_data.push({source: 'Main_topic_classifications', target: 'Objects‎', value: 100});
+links_data.push({source: 'Main_topic_classifications', target: 'Main topic articles', value: 100});
+
 const svg = d3.select("main").append("svg")
     .attr("width", width)
     .attr("height", height);
@@ -15,9 +22,7 @@ initSimulation();
 
 function initData() {
 
-  node = node.data(nodes_data, function(d) { return d.id });
-
-  node.exit().remove();
+  node = node.data(nodes_data);
 
   node = node.enter()
       .append("g")
@@ -32,10 +37,8 @@ function initData() {
       .on("click", function () {
 
         let title = this.nextSibling.textContent;
-        if (title === '')
-          title = 'Main_topic_classifications';
 
-        d3.select(this.parent).attr("class", "active")
+        d3.select(this).attr("class", "active")
         d3.select(this.nextSibling).attr("class", "active")
 
         const response = get('/wiki?title=' + title);
@@ -49,17 +52,14 @@ function initData() {
         // links_data = [];
 
         responseJson.categories.forEach(name => {
-          nodes_data.push({id: name, group: 1});
-          links_data.push({source: title, target: name, value: 100})
+          // nodes_data.push({id: name, group: 1});
+          // links_data.push({source: title, target: name, value: 100})
         })
 
         console.log(nodes_data)
         console.log(links_data)
 
-        initData();
-        simulation.force("links").initialize(links_data);
-        simulation.force("charge").initialize(links_data);
-        simulation.force("center").initialize(links_data);
+        // initData();
       });
 
   node.append("text")
@@ -69,8 +69,7 @@ function initData() {
         return d.id === 'Main_topic_classifications' ? 'Main_topic_classifications' : d.id
       });
 
-  link = link.data(links_data, function(d) { return d.source.id + "-" + d.target.id; });
-  link.exit().remove();
+  link = link.data(links_data);
   link = link.enter()
       .append("line")
       .attr("class", "link")
@@ -91,21 +90,11 @@ function initSimulation() {
 }
 
 function tickActions() {
-  link.attr("x1", function (d) {
-    return d.source.x;
-  })
-      .attr("y1", function (d) {
-        return d.source.y;
-      })
-      .attr("x2", function (d) {
-        return d.target.x;
-      })
-      .attr("y2", function (d) {
-        return d.target.y;
-      });
-  node.attr("transform", function (d) {
-    return "translate(" + d.x + "," + d.y + ")";
-  });
+  link.attr("x1", function (d) {return d.source.x;})
+      .attr("y1", function (d) {return d.source.y;})
+      .attr("x2", function (d) {return d.target.x;})
+      .attr("y2", function (d) {return d.target.y;});
+  node.attr("transform", function (d) {return "translate(" + d.x + "," + d.y + ")";});
 }
 
 function dragstarted(d) {
@@ -125,9 +114,9 @@ function dragended(d) {
   d.fy = null;
 }
 
-function get(theUrl) {
+function get(url) {
   let xmlHttp = new XMLHttpRequest();
-  xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
+  xmlHttp.open( "GET", url, false ); // false for synchronous request
   xmlHttp.send( null );
   return xmlHttp.responseText;
 }
