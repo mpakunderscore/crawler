@@ -15,28 +15,10 @@ function convertToPlaintext() {
 let initTarget = function () {
 
     target.addEventListener('focus', (event) => {
-
-        // console.log(event)
-
-        // console.log(target.innerText)
-
         target.innerText = ''
-
-        // let paste = (event.clipboardData || window.clipboardData).getData('text');
-        // // paste = paste.toUpperCase();
-        // paste = '';
-        //
-        // const selection = window.getSelection();
-        //
-        // if (!selection.rangeCount)
-        //     return false;
-        //
-        // selection.deleteFromDocument();
-        // selection.getRangeAt(0).insertNode(document.createTextNode(paste));
-        // event.preventDefault();
     });
 
-    target.addEventListener("input", convertToPlaintext, false);
+    target.addEventListener('input', convertToPlaintext, false);
 
     target.addEventListener('paste', (event) => {
 
@@ -55,7 +37,6 @@ let initTarget = function () {
             return;
         }
 
-
         target.innerText = paste;
 
         target.blur();
@@ -70,8 +51,6 @@ let initTarget = function () {
         target.contentEditable = 'false';
         let dataTarget = target;
         target = node;
-
-
 
         initTarget();
 
