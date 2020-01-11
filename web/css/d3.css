@@ -3,6 +3,7 @@
 }
 
 line {
+    pointer-events: none;
     stroke: #999;
     stroke-opacity: 0.3;
 }

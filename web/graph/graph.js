@@ -1,11 +1,11 @@
 const width = 1000, height = 600;
 
 let mainCategory = {id: "Main_topic_classifications"};
-let nodes_data =  [mainCategory, {id: 'Objects‎'}, {id: 'Main topic articles'}];
+let mainObject = {id: 'Objects‎'};
+let nodes_data = [mainCategory, mainObject];
 
 let links_data = [];
-links_data.push({source: 'Main_topic_classifications', target: 'Objects‎', value: 100});
-links_data.push({source: 'Main_topic_classifications', target: 'Main topic articles', value: 100});
+links_data.push({source: mainCategory, target: mainObject, value: 100});
 
 const svg = d3.select("main").append("svg")
     .attr("width", width)
@@ -22,8 +22,8 @@ initSimulation();
 
 function initData() {
 
-  node = node.data(nodes_data);
-
+  node = node.data(nodes_data, function(d) { return d.id;});
+  node.exit().remove();
   node = node.enter()
       .append("g")
       .attr("class", "node")
@@ -34,33 +34,7 @@ function initData() {
 
   node.append("circle")
       .attr("r", 5)
-      .on("click", function () {
-
-        let title = this.nextSibling.textContent;
-
-        d3.select(this).attr("class", "active")
-        d3.select(this.nextSibling).attr("class", "active")
-
-        const response = get('/wiki?title=' + title);
-        const responseJson = JSON.parse(response);
-
-        console.log(d3.select(this))
-        console.log(links_data)
-        console.log(responseJson.categories)
-
-        // nodes_data = [];
-        // links_data = [];
-
-        responseJson.categories.forEach(name => {
-          // nodes_data.push({id: name, group: 1});
-          // links_data.push({source: title, target: name, value: 100})
-        })
-
-        console.log(nodes_data)
-        console.log(links_data)
-
-        // initData();
-      });
+      .on("click", function () {addNode(this, this.nextSibling.textContent)});
 
   node.append("text")
       .attr("dx", 10)
@@ -69,11 +43,34 @@ function initData() {
         return d.id === 'Main_topic_classifications' ? 'Main_topic_classifications' : d.id
       });
 
-  link = link.data(links_data);
+  link = link.data(links_data, function(d) { return d.source.id + "-" + d.target.id; });
+  link.exit().remove();
   link = link.enter()
       .append("line")
-      .attr("class", "link")
-      .merge(link);
+      .attr("class", "link");
+}
+
+function addNode(circle, title) {
+
+  d3.select(circle).attr("class", "active")
+  d3.select(circle.nextSibling).attr("class", "active")
+
+  const response = get('/wiki?title=' + title);
+  const responseJson = JSON.parse(response);
+
+  console.log(responseJson.categories)
+
+  responseJson.categories.forEach(name => {
+    const category = {id: name};
+    nodes_data.push(category);
+    links_data.push({source: category, target: mainObject, value: 100})
+  });
+
+  initData();
+  initSimulation();
+
+  console.log(nodes_data)
+  console.log(links_data)
 }
 
 function initSimulation() {
@@ -87,6 +84,7 @@ function initSimulation() {
       }));
   simulation.force("charge", d3.forceManyBody())
   simulation.force("center", d3.forceCenter(width / 2, height / 2));
+  simulation.alpha(1).restart();
 }
 
 function tickActions() {
