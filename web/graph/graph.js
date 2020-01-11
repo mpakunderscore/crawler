@@ -1,10 +1,13 @@
-const width = 1000, height = 600;
+const width = screen.width, height = 600;
+console.log(width)
+console.log(height)
 
 let mainCategory = {id: "Main_topic_classifications"};
-// let mainObject = {id: 'Objects‎'};
-let nodes_data = [mainCategory];
 
+let nodes_data = [];
 let links_data = [];
+
+nodes_data.push(mainCategory)
 // links_data.push({source: mainCategory, target: mainObject, value: 100});
 
 const svg = d3.select("main").append("svg")
@@ -63,10 +66,10 @@ function addNode(title) {
 
   console.log(responseJson.categories)
 
-  responseJson.categories.slice(0, 5).forEach(name => {
+  responseJson.categories.forEach(name => {
     const category = {id: name};
     nodes_data.push(category);
-    links_data.push({source: category, target: title, value: 100})
+    links_data.push({source: category, target: title, value: 150})
   });
 
   initData();
