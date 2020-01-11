@@ -1,11 +1,11 @@
 const width = 1000, height = 600;
 
 let mainCategory = {id: "Main_topic_classifications"};
-let mainObject = {id: 'Objects‎'};
-let nodes_data = [mainCategory, mainObject];
+// let mainObject = {id: 'Objects‎'};
+let nodes_data = [mainCategory];
 
 let links_data = [];
-links_data.push({source: mainCategory, target: mainObject, value: 100});
+// links_data.push({source: mainCategory, target: mainObject, value: 100});
 
 const svg = d3.select("main").append("svg")
     .attr("width", width)
@@ -30,11 +30,16 @@ function initData() {
       .call(d3.drag()
           .on("start", dragstarted)
           .on("drag", dragged)
-          .on("end", dragended));
+          .on("end", dragended))
+      .merge(node);
 
   node.append("circle")
       .attr("r", 5)
-      .on("click", function () {addNode(this, this.nextSibling.textContent)});
+      .on("click", function () {
+        d3.select(this).attr("class", "active")
+        d3.select(this.nextSibling).attr("class", "active")
+        addNode(this.nextSibling.textContent)
+      });
 
   node.append("text")
       .attr("dx", 10)
@@ -47,30 +52,28 @@ function initData() {
   link.exit().remove();
   link = link.enter()
       .append("line")
-      .attr("class", "link");
+      .attr("class", "link")
+      .merge(link);
 }
 
-function addNode(circle, title) {
-
-  d3.select(circle).attr("class", "active")
-  d3.select(circle.nextSibling).attr("class", "active")
+function addNode(title) {
 
   const response = get('/wiki?title=' + title);
   const responseJson = JSON.parse(response);
 
   console.log(responseJson.categories)
 
-  responseJson.categories.forEach(name => {
+  responseJson.categories.slice(0, 5).forEach(name => {
     const category = {id: name};
     nodes_data.push(category);
-    links_data.push({source: category, target: mainObject, value: 100})
+    links_data.push({source: category, target: title, value: 100})
   });
 
   initData();
   initSimulation();
 
-  console.log(nodes_data)
-  console.log(links_data)
+  // console.log(nodes_data)
+  // console.log(links_data)
 }
 
 function initSimulation() {
