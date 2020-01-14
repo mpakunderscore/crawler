@@ -51,6 +51,10 @@ text {
     z-index: 1;
 }
 
+text.main {
+    fill-opacity: 1;
+}
+
 text.active {
     fill-opacity: 1;
 }

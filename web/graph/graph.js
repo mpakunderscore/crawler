@@ -9,7 +9,7 @@ const textHeight = isMobile ? '.4em' : '.33em';
 
 let mainCategory = {id: 'Menu', main: true};
 let c1 = {id: 'About'}
-// let c2 = {id: 'Feed'}
+let c2 = {id: 'Languages'}
 let c3 = {id: 'Wiki'}
 
 let nodes_data = [];
@@ -17,10 +17,10 @@ let links_data = [];
 
 nodes_data.push(mainCategory)
 nodes_data.push(c1)
-// nodes_data.push(c2)
+nodes_data.push(c2)
 nodes_data.push(c3)
 links_data.push({source: mainCategory, target: c1, value: 100});
-// links_data.push({source: mainCategory, target: c2, value: 100});
+links_data.push({source: mainCategory, target: c2, value: 100});
 links_data.push({source: mainCategory, target: c3, value: 100});
 
 const svg = d3.select('main').append('svg')
@@ -68,6 +68,9 @@ function initView() {
       .append('text')
       .attr('dx', textPadding)
       .attr('dy', textHeight)
+      .attr('class', (d) => {
+        return d.main ? 'main' : ''
+      })
       .text(function (d) {
         return d.id;
       })
@@ -102,7 +105,7 @@ function addNode(that, main) {
   // let title = 'Music';
 
   d3.select(that).attr('class', main ? 'main' : 'active')
-  d3.select(that.nextSibling).attr('class', 'active')
+  d3.select(that.nextSibling).attr('class', main ? 'main' : 'active')
 
   const response = get('/wiki?title=' + title);
   const responseJson = JSON.parse(response);
