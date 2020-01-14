@@ -1,3 +1,7 @@
+@media only screen and (max-width: 600px) {
+
+}
+
 #graph {
     /*background-color: lightcoral;*/
 }
@@ -8,24 +12,29 @@ line {
     stroke-opacity: 0.1;
 }
 
-g:hover {
+g {
 }
 
 circle {
     fill: white;
-    stroke: #848484;
+    stroke: #b8b8b8;
     stroke-width: 1px;
 }
 
 circle.active {
-    stroke: black;
-    fill: #00b000;
+    stroke: #007200;
+    fill: #00cb00;
+}
+
+circle.main {
+    stroke: #1299bf;
+    fill: #16b9e7;
 }
 
 circle:hover {
     cursor: pointer;
-    stroke: black;
-    fill: #00b000;
+    stroke: #008e00;
+    fill: #00cb00;
 }
 
 circle:hover + text {

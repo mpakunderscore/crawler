@@ -2,15 +2,26 @@ const width = screen.width, height = document.body.clientHeight
 console.log(width)
 console.log(height)
 
-let mainCategory = {id: ''};
-// let mainObject = {id: 'Objects'}
+const isMobile = width < 600;
+const circleRadius = isMobile ? 12 : 6;
+const textPadding = isMobile ? 18 : 12;
+const textHeight = isMobile ? '.4em' : '.33em';
+
+let mainCategory = {id: 'Menu', main: true};
+let c1 = {id: 'About'}
+// let c2 = {id: 'Feed'}
+let c3 = {id: 'Wiki'}
 
 let nodes_data = [];
 let links_data = [];
 
 nodes_data.push(mainCategory)
-// nodes_data.push(mainObject)
-// links_data.push({source: mainCategory, target: mainObject, value: 100});
+nodes_data.push(c1)
+// nodes_data.push(c2)
+nodes_data.push(c3)
+links_data.push({source: mainCategory, target: c1, value: 100});
+// links_data.push({source: mainCategory, target: c2, value: 100});
+links_data.push({source: mainCategory, target: c3, value: 100});
 
 const svg = d3.select('main').append('svg')
     .attr('width', width)
@@ -33,9 +44,6 @@ function initData() {
   link = link.data(links_data, function (d) {
     return d.source.id + '-' + d.target.id;
   })
-
-  // console.log(nodes_data)
-  // console.log(links_data)
 }
 
 function initView() {
@@ -47,24 +55,25 @@ function initView() {
           .on('drag', dragged)
           .on('end', dragended))
       .append('circle')
-      .attr('r', 5)
-      .on('click', function () {
-        console.log(this)
-        addNode(this)
+      .attr('r', circleRadius)
+      .attr('class', (d) => {
+        return d.main ? 'main' : ''
+      })
+      .on('click', function (d) {
+        addNode(this, d.main)
       })
       .select(function(){
         return this.parentNode;
       })
       .append('text')
-      .attr('dx', 10)
-      .attr('dy', '.35em')
+      .attr('dx', textPadding)
+      .attr('dy', textHeight)
       .text(function (d) {
         return d.id;
       })
       .select(function(){
         return this.parentNode;
       })
-
       .merge(node);
 
   // node.append('text')
@@ -86,13 +95,13 @@ function initView() {
   link.exit().remove();
 }
 
-function addNode(that) {
+function addNode(that, main) {
 
   let title = that.nextSibling.textContent;
   // let title = that.textContent;
   // let title = 'Music';
 
-  d3.select(that).attr('class', 'active')
+  d3.select(that).attr('class', main ? 'main' : 'active')
   d3.select(that.nextSibling).attr('class', 'active')
 
   const response = get('/wiki?title=' + title);
@@ -103,10 +112,14 @@ function addNode(that) {
   let titleNode = nodes_data.find(element => element.id === title);
 
   shuffle(responseJson.categories).splice(0, 7).forEach(name => {
+    const category = {id: name};
     if (!nodes_data.find(element => element.id === name)) {
-      const category = {id: name};
       nodes_data.push(category);
       links_data.push({source: category, target: titleNode, value: 100})
+    } else {
+      // if (!links_data.find(element => element.source === category)) {
+      //   console.log(titleNode)
+      // }
     }
   });
 
