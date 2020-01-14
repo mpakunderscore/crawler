@@ -60,7 +60,7 @@ function initView() {
         return d.main ? 'main' : ''
       })
       .on('click', function (d) {
-        addNode(this, d.main)
+        addNode(this, d)
       })
       .select(function(){
         return this.parentNode;
@@ -72,7 +72,7 @@ function initView() {
         return d.main ? 'main' : ''
       })
       .text(function (d) {
-        return d.id;
+        return d.id + (d.info ? ' ' + d.info : '');
       })
       .select(function(){
         return this.parentNode;
@@ -98,14 +98,14 @@ function initView() {
   link.exit().remove();
 }
 
-function addNode(that, main) {
+function addNode(that, d) {
 
-  let title = that.nextSibling.textContent;
+  // let title = that.nextSibling.textContent;
   // let title = that.textContent;
-  // let title = 'Music';
+  let title = d.id;
 
-  d3.select(that).attr('class', main ? 'main' : 'active')
-  d3.select(that.nextSibling).attr('class', main ? 'main' : 'active')
+  d3.select(that).attr('class', d.main ? 'main' : 'active')
+  d3.select(that.nextSibling).attr('class', d.main ? 'main' : 'active')
 
   const response = get('/wiki?title=' + title);
   const responseJson = JSON.parse(response);
@@ -114,11 +114,11 @@ function addNode(that, main) {
 
   let titleNode = nodes_data.find(element => element.id === title);
 
-  shuffle(responseJson.categories).splice(0, 7).forEach(name => {
-    const category = {id: name};
-    if (!nodes_data.find(element => element.id === name)) {
-      nodes_data.push(category);
-      links_data.push({source: category, target: titleNode, value: 100})
+  shuffle(responseJson.categories).splice(0, 7).forEach(categoryJson => {
+    // const category = {id: categoryJson.id};
+    if (!nodes_data.find(element => element.id === categoryJson.id)) {
+      nodes_data.push(categoryJson);
+      links_data.push({source: categoryJson, target: titleNode, value: 100})
     } else {
       // if (!links_data.find(element => element.source === category)) {
       //   console.log(titleNode)
