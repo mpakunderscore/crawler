@@ -60,6 +60,7 @@ let getWords = function (text) {
 
 exports.getWikiCategories = async function (title) {
     try {
+        if (title === '') title = 'Main_topic_classifications';
         const url = encodeURI('https://en.wikipedia.org/wiki/Category:' + title);
         const response = await axios.get(url);
         const data = response.data;

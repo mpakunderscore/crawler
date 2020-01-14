@@ -12,13 +12,14 @@ g:hover {
 }
 
 circle {
-    fill: ghostwhite;
+    fill: white;
     stroke: #848484;
     stroke-width: 1px;
 }
 
 circle.active {
-    stroke: #00b000;
+    stroke: black;
+    fill: #00b000;
 }
 
 circle:hover {
