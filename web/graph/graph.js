@@ -1,16 +1,16 @@
-const width = screen.width, height = 600;
+const width = screen.width, height = document.body.clientHeight
 console.log(width)
 console.log(height)
 
 let mainCategory = {id: ''};
-let mainObject = {id: 'Objects'}
+// let mainObject = {id: 'Objects'}
 
 let nodes_data = [];
 let links_data = [];
 
 nodes_data.push(mainCategory)
-nodes_data.push(mainObject)
-links_data.push({source: mainCategory, target: mainObject, value: 100});
+// nodes_data.push(mainObject)
+// links_data.push({source: mainCategory, target: mainObject, value: 100});
 
 const svg = d3.select('main').append('svg')
     .attr('width', width)
