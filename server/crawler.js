@@ -69,7 +69,7 @@ exports.getWikiCategories = async function (title) {
         const $ = cheerio.load(data);
         $('#mw-subcategories .CategoryTreeItem').find('a').each(function (index, element) {
             // console.log($(element.nextSibling).nextSibling.innerHTML)
-            // categories.push({id: $(element).text(), info: $(element).next().text()});
+            categories.push({id: $(element).text(), info: $(element).next().text()});
             // console.log($(element.nextSibling).text())
         });
 
