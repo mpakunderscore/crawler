@@ -1,7 +1,3 @@
-@media only screen and (max-width: 600px) {
-
-}
-
 #graph {
     /*background-color: lightcoral;*/
 }
@@ -34,7 +30,12 @@ circle.main {
 circle:hover {
     cursor: pointer;
     stroke: #008e00;
-    fill: #00cb00;
+    fill: rgba(0, 203, 0, 0.52);
+}
+
+circle.active:hover {
+    stroke: #8e5d04;
+    fill: rgba(203, 159, 8, 0.52);
 }
 
 circle:hover + text {

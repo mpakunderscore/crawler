@@ -1,27 +1,35 @@
-const width = screen.width, height = document.body.clientHeight
+const isMobile = screen.width < 600;
+
+const width = screen.width / (isMobile ? 1 : 2);
+const height = document.body.clientHeight / (isMobile ? 2 : 1);
+
 console.log(width)
 console.log(height)
 
-const isMobile = width < 600;
+
 const circleRadius = isMobile ? 12 : 6;
 const textPadding = isMobile ? 18 : 12;
 const textHeight = isMobile ? '.4em' : '.33em';
 
-let mainCategory = {id: 'Menu', main: true};
-let c1 = {id: 'About'}
-let c2 = {id: 'Languages'}
-let c3 = {id: 'Wiki'}
-
 let nodes_data = [];
 let links_data = [];
 
+let mainCategory = {id: 'Menu', main: true};
 nodes_data.push(mainCategory)
-nodes_data.push(c1)
-nodes_data.push(c2)
-nodes_data.push(c3)
-links_data.push({source: mainCategory, target: c1, value: 100});
-links_data.push({source: mainCategory, target: c2, value: 100});
-links_data.push({source: mainCategory, target: c3, value: 100});
+
+menuItem({id: 'Languages'})
+menuItem({id: 'Wiki'})
+menuItem({id: 'Random'})
+// menuItem({id: 'YCNews'})
+menuItem({id: 'About'})
+
+let lang = 'en';
+
+function menuItem(item) {
+  nodes_data.push(item)
+  links_data.push({source: mainCategory, target: item, value: 100});
+}
+
 
 const svg = d3.select('main').append('svg')
     .attr('width', width)
@@ -107,13 +115,15 @@ function addNode(that, d) {
   d3.select(that).attr('class', d.main ? 'main' : 'active')
   d3.select(that.nextSibling).attr('class', d.main ? 'main' : 'active')
 
-  const response = get('/wiki?title=' + title);
+  const response = get('/wiki?title=' + title + '&lang=ru');
   const responseJson = JSON.parse(response);
 
-  console.log(responseJson.categories)
+  // console.log(responseJson.categories)
+  console.log(responseJson.pages)
 
   let titleNode = nodes_data.find(element => element.id === title);
 
+  // nodes_data = [];
   shuffle(responseJson.categories).splice(0, 7).forEach(categoryJson => {
     // const category = {id: categoryJson.id};
     if (!nodes_data.find(element => element.id === categoryJson.id)) {
@@ -129,6 +139,17 @@ function addNode(that, d) {
   initData();
   initView();
   initSimulation();
+
+  setContent(responseJson.pages)
+}
+
+function setContent(pages) {
+  let html = '';
+  document.getElementById('content').innerHTML = '';
+  for (let i = 0; i < pages.length; i++) {
+    html += '<a href="https://' + lang + '.wikipedia.org/wiki/' + pages[i].id + '" target="_blank">' + pages[i].id + '</a>';
+  }
+  document.getElementById('content').innerHTML += html;
 }
 
 function initSimulation() {

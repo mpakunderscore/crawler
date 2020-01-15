@@ -18,6 +18,6 @@ app.get('/url', async function (request, response) {
 });
 
 app.get('/wiki', async function (request, response) {
-    response.json(await crawler.getWikiCategories(request.query.title));
+    response.json(await crawler.getWikiCategories(request.query.title, request.query.lang));
 });
 

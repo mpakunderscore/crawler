@@ -58,22 +58,32 @@ let getWords = function (text) {
     return sortable;
 }
 
-exports.getWikiCategories = async function (title) {
+exports.getWikiCategories = async function (title, lang = 'en') {
+
+    const categoryLang = {'en': 'Category:', 'ru': 'Категория:'}
+    const mainTitle = {'en': 'Main_topic_classifications', 'ru': 'Статьи'};
+
     try {
-        if (title === 'Wiki') title = 'Main_topic_classifications';
-        const url = encodeURI('https://en.wikipedia.org/wiki/Category:' + title);
+        if (title === 'Wiki') title = mainTitle[lang];
+
+        const urlString = 'https://' + lang + '.wikipedia.org/wiki/' + categoryLang[lang] + title;
+        console.log(urlString)
+        const url = encodeURI(urlString);
         const response = await axios.get(url);
         const data = response.data;
 
         let categories = [];
         const $ = cheerio.load(data);
         $('#mw-subcategories .CategoryTreeItem').find('a').each(function (index, element) {
-            // console.log($(element.nextSibling).nextSibling.innerHTML)
             categories.push({id: $(element).text(), info: $(element).next().text()});
-            // console.log($(element.nextSibling).text())
         });
+        let pages = [];
+        $('#mw-pages li').find('a').each(function (index, element) {
+            pages.push({id: $(element).text()});
+        });
+        // console.log(pages)
 
-        return {categories: categories};
+        return {categories: categories, pages: pages};
     } catch (error) {
         console.log(error);
     }
