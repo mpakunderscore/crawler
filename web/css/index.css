@@ -32,7 +32,7 @@ a {
 }
 
 #content {
-    padding: 20px;
+    /*padding: 20px;*/
     /*margin: 20px;*/
     border-radius: 3px;
     background-color: ghostwhite;
@@ -43,11 +43,11 @@ a {
     overflow: scroll;
 }
 
-#content a {
-    padding-bottom: 10px;
+main #content div {
+    padding: 10px;
 }
 
-#content a:hover {
+main #content div:hover {
     background-color: white;
 }
 

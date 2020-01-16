@@ -20,10 +20,11 @@ nodes_data.push(mainCategory)
 menuItem({id: 'Languages'})
 menuItem({id: 'Wiki'})
 menuItem({id: 'Random'})
-// menuItem({id: 'YCNews'})
+// menuItem({id: 'HN'})
 menuItem({id: 'About'})
 
-let lang = 'en';
+// let lang = 'en';
+let lang = 'ru';
 
 function menuItem(item) {
   nodes_data.push(item)
@@ -115,7 +116,7 @@ function addNode(that, d) {
   d3.select(that).attr('class', d.main ? 'main' : 'active')
   d3.select(that.nextSibling).attr('class', d.main ? 'main' : 'active')
 
-  const response = get('/wiki?title=' + title + '&lang=ru');
+  const response = get('/wiki?title=' + title + '&lang=' + lang);
   const responseJson = JSON.parse(response);
 
   // console.log(responseJson.categories)
@@ -147,7 +148,7 @@ function setContent(pages) {
   let html = '';
   document.getElementById('content').innerHTML = '';
   for (let i = 0; i < pages.length; i++) {
-    html += '<a href="https://' + lang + '.wikipedia.org/wiki/' + pages[i].id + '" target="_blank">' + pages[i].id + '</a>';
+    html += '<div><a href="https://' + lang + '.wikipedia.org/wiki/' + pages[i].id + '" target="_blank">' + pages[i].id + '</a></div>';
   }
   document.getElementById('content').innerHTML += html;
 }
