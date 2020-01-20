@@ -109,6 +109,8 @@ function initView() {
 
 function addNode(that, d) {
 
+  console.log('addNode')
+
   // let title = that.nextSibling.textContent;
   // let title = that.textContent;
   let title = d.id;
@@ -117,6 +119,10 @@ function addNode(that, d) {
   d3.select(that).attr('class', d.main ? 'main' : 'active')
   d3.select(that.nextSibling).attr('class', d.main ? 'main' : 'active')
   // d.active = true;
+
+  if (title === 'Random') {
+    title = 'Wiki';
+  }
 
   const response = get('/wiki?title=' + title + '&lang=' + lang);
   const responseJson = JSON.parse(response);
@@ -129,12 +135,18 @@ function addNode(that, d) {
   console.log(nodes_data)
 
   // nodes_data = [];
+  let first = false;
   shuffle(responseJson.categories).splice(0, 7).forEach(categoryJson => {
     // const category = {id: categoryJson.id};
     if (!nodes_data.find(element => element.id === categoryJson.id)) {
       // categoryJson.active = true;
       nodes_data.push(categoryJson);
       links_data.push({source: categoryJson, target: titleNode, value: 100})
+      if (!first) {
+        first = true;
+        addNode(that, categoryJson)
+      }
+
     } else {
       // if (!links_data.find(element => element.source === category)) {
       //   console.log(titleNode)
