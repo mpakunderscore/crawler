@@ -17,7 +17,7 @@ let links_data = [];
 let mainCategory = {id: 'Menu', main: true};
 nodes_data.push(mainCategory)
 
-menuItem({id: 'Languages', active: true})
+menuItem({id: 'Languages'})
 menuItem({id: 'Wiki'})
 menuItem({id: 'Random'})
 // menuItem({id: 'HN'})
@@ -120,45 +120,69 @@ function addNode(that, d) {
   d3.select(that.nextSibling).attr('class', d.main ? 'main' : 'active')
   // d.active = true;
 
+  // nodes_data = [];
+  let first = false;
   if (title === 'Random') {
     title = 'Wiki';
   }
 
-  const response = get('/wiki?title=' + title + '&lang=' + lang);
-  const responseJson = JSON.parse(response);
-
-  // console.log(responseJson.categories)
-  console.log(responseJson.pages)
-
   let titleNode = nodes_data.find(element => element.id === title);
   titleNode.active = true;
-  console.log(nodes_data)
+  // console.log(nodes_data)
 
-  // nodes_data = [];
-  let first = false;
-  shuffle(responseJson.categories).splice(0, 7).forEach(categoryJson => {
-    // const category = {id: categoryJson.id};
-    if (!nodes_data.find(element => element.id === categoryJson.id)) {
-      // categoryJson.active = true;
-      nodes_data.push(categoryJson);
-      links_data.push({source: categoryJson, target: titleNode, value: 100})
-      if (!first) {
-        first = true;
-        addNode(that, categoryJson)
-      }
+  if (title === 'Languages' || title === 'Ru' || title === 'En') {
 
-    } else {
-      // if (!links_data.find(element => element.source === category)) {
-      //   console.log(titleNode)
-      // }
+    first = true;
+
+    if (title === 'Languages') {
+      let ru = {id: 'Ru'};
+      let en = {id: 'En'};
+      nodes_data.push(ru);
+      nodes_data.push(en);
+      links_data.push({source: ru, target: titleNode, value: 100})
+      links_data.push({source: en, target: titleNode, value: 100})
     }
-  });
+
+    if (title === 'Ru')
+      lang = 'ru';
+
+    if (title === 'En')
+      lang = 'en';
+
+  } else {
+
+    const response = get('/wiki?title=' + title + '&lang=' + lang);
+    const responseJson = JSON.parse(response);
+
+    // console.log(responseJson.categories)
+    console.log(responseJson.pages)
+
+    shuffle(responseJson.categories).splice(0, 7).forEach(categoryJson => {
+      // const category = {id: categoryJson.id};
+      if (!nodes_data.find(element => element.id === categoryJson.id)) {
+        // categoryJson.active = true;
+        nodes_data.push(categoryJson);
+        links_data.push({source: categoryJson, target: titleNode, value: 100})
+        if (!first) {
+          first = true;
+          addNode(that, categoryJson)
+        }
+
+      } else {
+        // if (!links_data.find(element => element.source === category)) {
+        //   console.log(titleNode)
+        // }
+      }
+    });
+
+    setContent(responseJson.pages)
+  }
+
+
 
   initData();
   initView();
   initSimulation();
-
-  setContent(responseJson.pages)
 }
 
 function setContent(pages) {
