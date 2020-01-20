@@ -17,14 +17,14 @@ let links_data = [];
 let mainCategory = {id: 'Menu', main: true};
 nodes_data.push(mainCategory)
 
-menuItem({id: 'Languages'})
+menuItem({id: 'Languages', active: true})
 menuItem({id: 'Wiki'})
 menuItem({id: 'Random'})
 // menuItem({id: 'HN'})
 menuItem({id: 'About'})
 
-// let lang = 'en';
-let lang = 'ru';
+let lang = 'en';
+// let lang = 'ru';
 
 function menuItem(item) {
   nodes_data.push(item)
@@ -66,7 +66,7 @@ function initView() {
       .append('circle')
       .attr('r', circleRadius)
       .attr('class', (d) => {
-        return d.main ? 'main' : ''
+        return d.main ? 'main' : (d.active ? 'active' : '')
       })
       .on('click', function (d) {
         addNode(this, d)
@@ -78,7 +78,7 @@ function initView() {
       .attr('dx', textPadding)
       .attr('dy', textHeight)
       .attr('class', (d) => {
-        return d.main ? 'main' : ''
+        return d.main ? 'main' : (d.active ? 'active' : '')
       })
       .text(function (d) {
         return d.id + (d.info ? ' ' + d.info : '');
@@ -112,9 +112,11 @@ function addNode(that, d) {
   // let title = that.nextSibling.textContent;
   // let title = that.textContent;
   let title = d.id;
+  // d.active = true;
 
   d3.select(that).attr('class', d.main ? 'main' : 'active')
   d3.select(that.nextSibling).attr('class', d.main ? 'main' : 'active')
+  // d.active = true;
 
   const response = get('/wiki?title=' + title + '&lang=' + lang);
   const responseJson = JSON.parse(response);
@@ -123,11 +125,14 @@ function addNode(that, d) {
   console.log(responseJson.pages)
 
   let titleNode = nodes_data.find(element => element.id === title);
+  titleNode.active = true;
+  console.log(nodes_data)
 
   // nodes_data = [];
   shuffle(responseJson.categories).splice(0, 7).forEach(categoryJson => {
     // const category = {id: categoryJson.id};
     if (!nodes_data.find(element => element.id === categoryJson.id)) {
+      // categoryJson.active = true;
       nodes_data.push(categoryJson);
       links_data.push({source: categoryJson, target: titleNode, value: 100})
     } else {
