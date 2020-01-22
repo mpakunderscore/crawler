@@ -1,7 +1,7 @@
 const isMobile = screen.width < 600;
-
-const width = screen.width / (isMobile ? 1 : 2);
-const height = document.body.clientHeight / (isMobile ? 2 : 1);
+const borderRatio = 0.75;
+const width = screen.width * (isMobile ? 1 : borderRatio);
+const height = document.body.clientHeight * (isMobile ? borderRatio : 1);
 
 console.log(width)
 console.log(height)
@@ -18,7 +18,7 @@ let mainCategory = {id: 'Menu', main: true};
 nodes_data.push(mainCategory)
 
 menuItem({id: 'Languages'})
-menuItem({id: 'Wiki'})
+menuItem({id: 'Wiki', active: true})
 menuItem({id: 'Random'})
 // menuItem({id: 'HN'})
 menuItem({id: 'About'})
@@ -69,7 +69,7 @@ function initView() {
         return d.main ? 'main' : (d.active ? 'active' : '')
       })
       .on('click', function (d) {
-        addNode(this, d)
+        addNode(this, d, false)
       })
       .select(function(){
         return this.parentNode;
@@ -107,7 +107,7 @@ function initView() {
   link.exit().remove();
 }
 
-function addNode(that, d) {
+function addNode(that, d, random) {
 
   console.log('addNode')
 
@@ -121,14 +121,15 @@ function addNode(that, d) {
   // d.active = true;
 
   // nodes_data = [];
-  let first = false;
+  let first = !random;
   if (title === 'Random') {
     title = 'Wiki';
+    first = false;
+    random = true;
   }
 
   let titleNode = nodes_data.find(element => element.id === title);
   titleNode.active = true;
-  // console.log(nodes_data)
 
   if (title === 'Languages' || title === 'Ru' || title === 'En') {
 
@@ -157,16 +158,19 @@ function addNode(that, d) {
     // console.log(responseJson.categories)
     console.log(responseJson.pages)
 
-    shuffle(responseJson.categories).splice(0, 7).forEach(categoryJson => {
-      // const category = {id: categoryJson.id};
+    shuffle(responseJson.categories).splice(0, random ? 1 : 7).forEach(categoryJson => {
+
       if (!nodes_data.find(element => element.id === categoryJson.id)) {
         // categoryJson.active = true;
-        nodes_data.push(categoryJson);
-        links_data.push({source: categoryJson, target: titleNode, value: 100})
+
         if (!first) {
           first = true;
-          addNode(that, categoryJson)
+          categoryJson.active = true;
+          setTimeout(() => addNode(that, categoryJson, random), 1000);
         }
+
+        nodes_data.push(categoryJson);
+        links_data.push({source: categoryJson, target: titleNode, value: 100})
 
       } else {
         // if (!links_data.find(element => element.source === category)) {
@@ -183,6 +187,9 @@ function addNode(that, d) {
   initData();
   initView();
   initSimulation();
+
+  // if (randomJson)
+
 }
 
 function setContent(pages) {

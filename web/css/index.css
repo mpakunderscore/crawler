@@ -8,6 +8,8 @@ body {
 
     display: flex;
     justify-content: center;
+
+    --content-width: 25%;
 }
 
 main {
@@ -19,7 +21,10 @@ main {
 }
 
 main #content {
-    width: 50%;
+    /*width: 50%;*/
+    width: var(--content-width);
+    font-size: 12px;
+    /*background-color: red;*/
 }
 
 svg {
@@ -34,7 +39,7 @@ a {
 #content {
     /*padding: 20px;*/
     /*margin: 20px;*/
-    border-radius: 3px;
+    /*border-radius: 3px;*/
     background-color: ghostwhite;
     display: flex;
     flex-direction: column;
@@ -58,7 +63,7 @@ main #content div:hover {
     main #content {
         width: 100%;
         box-sizing: border-box;
-        height: 50%;
+        height: var(--content-width);
         border-left: none;
         border-top: 1px dashed gray;
     }
