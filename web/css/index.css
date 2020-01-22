@@ -24,7 +24,7 @@ main #content {
     /*width: 50%;*/
     width: var(--content-width);
     font-size: 12px;
-    /*background-color: red;*/
+    background-color: white;
 }
 
 svg {

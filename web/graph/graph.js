@@ -18,10 +18,10 @@ let mainCategory = {id: 'Menu', main: true};
 nodes_data.push(mainCategory)
 
 menuItem({id: 'Languages'})
-menuItem({id: 'Wiki', active: true})
+menuItem({id: 'Wiki', active: false})
 menuItem({id: 'Random'})
 // menuItem({id: 'HN'})
-menuItem({id: 'About'})
+// menuItem({id: 'About'})
 
 let lang = 'en';
 // let lang = 'ru';
@@ -35,6 +35,16 @@ function menuItem(item) {
 const svg = d3.select('main').append('svg')
     .attr('width', width)
     .attr('height', height);
+
+// svg.call(d3.zoom()
+//     .extent([[0, 0], [width, height]])
+//     .scaleExtent([1, 8])
+//     .on("zoom", zoomed));
+//
+// function zoomed() {
+//   const {transform} = d3.event;
+//   // node.attr("transform", d => `translate(${transform.apply(d)})`);
+// }
 
 let link = svg.selectAll('line');
 let node = svg.selectAll('node');
@@ -81,7 +91,7 @@ function initView() {
         return d.main ? 'main' : (d.active ? 'active' : '')
       })
       .text(function (d) {
-        return d.id + (d.info ? ' ' + d.info : '');
+        return d.id; // + (d.info ? ' ' + d.info : '');
       })
       .select(function(){
         return this.parentNode;
@@ -107,7 +117,7 @@ function initView() {
   link.exit().remove();
 }
 
-function addNode(that, d, random) {
+function addNode(circleElement, d, random) {
 
   console.log('addNode')
 
@@ -116,15 +126,12 @@ function addNode(that, d, random) {
   let title = d.id;
   // d.active = true;
 
-  d3.select(that).attr('class', d.main ? 'main' : 'active')
-  d3.select(that.nextSibling).attr('class', d.main ? 'main' : 'active')
+  d3.select(circleElement).attr('class', d.main ? 'main' : 'active')
+  d3.select(circleElement.nextSibling).attr('class', d.main ? 'main' : 'active')
   // d.active = true;
 
-  // nodes_data = [];
-  let first = !random;
   if (title === 'Random') {
     title = 'Wiki';
-    first = false;
     random = true;
   }
 
@@ -133,15 +140,15 @@ function addNode(that, d, random) {
 
   if (title === 'Languages' || title === 'Ru' || title === 'En') {
 
-    first = true;
+    selectNextNode = true;
 
     if (title === 'Languages') {
       let ru = {id: 'Ru'};
       let en = {id: 'En'};
       nodes_data.push(ru);
       nodes_data.push(en);
-      links_data.push({source: ru, target: titleNode, value: 100})
-      links_data.push({source: en, target: titleNode, value: 100})
+      links_data.push({source: ru, target: titleNode, value: 30})
+      links_data.push({source: en, target: titleNode, value: 30})
     }
 
     if (title === 'Ru')
@@ -163,10 +170,9 @@ function addNode(that, d, random) {
       if (!nodes_data.find(element => element.id === categoryJson.id)) {
         // categoryJson.active = true;
 
-        if (!first) {
-          first = true;
+        if (random) {
           categoryJson.active = true;
-          setTimeout(() => addNode(that, categoryJson, random), 1000);
+          setTimeout(() => addNode(circleElement, categoryJson, random), 1000);
         }
 
         nodes_data.push(categoryJson);
