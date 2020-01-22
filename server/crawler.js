@@ -60,8 +60,8 @@ let getWords = function (text) {
 
 exports.getWikiCategories = async function (title, lang = 'en') {
 
-    const categoryLang = {'en': 'Category:', 'ru': 'Категория:'}
-    const mainTitle = {'en': 'Main_topic_classifications', 'ru': 'Статьи'};
+    const categoryLang = {en: 'Category:', ru: 'Категория:', simple: 'Category:'}
+    const mainTitle = {en: 'Main_topic_classifications', ru: 'Статьи', simple: 'Articles'};
 
     try {
         if (title === 'Wiki') title = mainTitle[lang];

@@ -17,9 +17,10 @@ let links_data = [];
 let mainCategory = {id: 'Menu', main: true};
 nodes_data.push(mainCategory)
 
-menuItem({id: 'Languages'})
-menuItem({id: 'Wiki', active: false})
+
 menuItem({id: 'Random'})
+menuItem({id: 'Wiki', active: false})
+menuItem({id: 'Language'})
 // menuItem({id: 'HN'})
 // menuItem({id: 'About'})
 
@@ -138,17 +139,18 @@ function addNode(circleElement, d, random) {
   let titleNode = nodes_data.find(element => element.id === title);
   titleNode.active = true;
 
-  if (title === 'Languages' || title === 'Ru' || title === 'En') {
+  if (title === 'Language' || title === 'Ru' || title === 'En' || title === 'Simple') {
 
-    selectNextNode = true;
-
-    if (title === 'Languages') {
+    if (title === 'Language') {
       let ru = {id: 'Ru'};
       let en = {id: 'En'};
+      let simple = {id: 'Simple'};
       nodes_data.push(ru);
       nodes_data.push(en);
-      links_data.push({source: ru, target: titleNode, value: 30})
-      links_data.push({source: en, target: titleNode, value: 30})
+      nodes_data.push(simple);
+      links_data.push({source: ru, target: titleNode, value: 100})
+      links_data.push({source: en, target: titleNode, value: 100})
+      links_data.push({source: simple, target: titleNode, value: 100})
     }
 
     if (title === 'Ru')
@@ -156,6 +158,9 @@ function addNode(circleElement, d, random) {
 
     if (title === 'En')
       lang = 'en';
+
+    if (title === 'Simple')
+      lang = 'simple';
 
   } else {
 

@@ -53,7 +53,7 @@ main #content div {
 }
 
 main #content div:hover {
-    background-color: white;
+    background-color: ghostwhite;
 }
 
 @media only screen and (max-width: 600px) {
